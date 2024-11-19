@@ -22,6 +22,8 @@ function markdownToHtml(markdown){
         }
     }
 
+    markdown = wrapEmails(wrapLinks(markdown));
+
     const paragraphs = markdown.split('\n\n');
     let inCodeBlock = false;
 
@@ -209,6 +211,20 @@ function markdownToHtml(markdown){
     return htmlParagraphs.join('\n\n');
 }
 
+function wrapLinks(input){
+    var urlRegex = /(https?:\/\/[^\s]+)/gi;
+    return input.replace(urlRegex, function(url){
+        return `<a href="${url}">${url}</a>`;
+    });
+}
+
+function wrapEmails(input){
+    var emailRegex = /([a-zA-Z0-9._+-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+    return input.replace(emailRegex, function(url){
+        return `<a href="mailto:${url}">${url}</a>`;
+    });
+}
+
 function markDownText(line){
     //HANDLE IMAGES
     while(line.includes('![') && line.includes('](')){
@@ -218,8 +234,10 @@ function markDownText(line){
         const endUrl = line.indexOf(')', startUrl);
 
         if(startText !== -1 && endText !== -1 && startUrl !== -1 && endUrl !== -1){
-            const linkText = line.substring(startText+1, endText);
             const url = line.substring(startUrl+1, endUrl);
+            if(url.includes('"')){
+                break;
+            }
             const linkHtml = `<img src="${url}">`;
 
             line = line.slice(0, startText)+linkHtml+line.slice(endUrl+1);
@@ -239,6 +257,9 @@ function markDownText(line){
         if(startText !== -1 && endText !== -1 && startUrl !== -1 && endUrl !== -1){
             const linkText = line.substring(startText+1, endText);
             const url = line.substring(startUrl+1, endUrl);
+            if(url.includes('"')){
+                break;
+            }
             const linkHtml = `<a href="${url}">${linkText}</a>`;
 
             line = line.slice(0, startText)+linkHtml+line.slice(endUrl+1);
