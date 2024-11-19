@@ -37,7 +37,14 @@ function markdownToHtml(markdown){
             //HANDLE CODE BLOCKS
             if(line.startsWith('```')){
                 inCodeBlock = !inCodeBlock;
-                return inCodeBlock ? '<pre><code>' : '</code></pre>';
+
+                if(inCodeBlock){
+                    const previousLine = allLines[i+1];
+                    allLines[i+1] = '';
+                    return '<pre><code>'+previousLine;
+                }
+
+                return '</code></pre>';
             }
             
             if(inCodeBlock){
@@ -182,6 +189,7 @@ function markdownToHtml(markdown){
         });
 
         const joinedLines = processedLines.join('\n');
+
         if(!inCodeBlock && !joinedLines.startsWith('<h') && !joinedLines.startsWith('<pre>')){
             return `<p>${joinedLines}</p>`;
         }
