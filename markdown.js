@@ -4,21 +4,7 @@ function markdownToHtml(markdown){
 
         while(markdown.includes('<', cursor)){
             const start = markdown.indexOf('<', cursor);
-            const end = markdown.indexOf('>', start+1);
-            
-            if(end === -1){
-                break;
-            }
-            
-            let tagText = markdown.substring(start+1, end);
-            if(tagText.includes('<')){
-                let subCursor = 0;
-                while(tagText.includes('<', subCursor)){
-                    const start = tagText.indexOf('<', cursor);
-                    tagText = tagText.slice(0, start)+'&lt;'+tagText.slice(start+1);
-                }
-            }
-            markdown = markdown.slice(0, start)+`&lt;${tagText}&gt;`+markdown.slice(end+1);
+            markdown = markdown.slice(0, start)+'&lt;'+markdown.slice(start+1);
         }
     }
 
