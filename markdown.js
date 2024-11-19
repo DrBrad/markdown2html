@@ -28,6 +28,12 @@ const validTags = [
     'a'
 ];
 
+const validAttributes = [
+    'src',
+    'style',
+    'href'
+];
+
 function markdownToHtml(markdown){
     const paragraphs = markdown.split('\n\n');
     let inCodeBlock = false;
@@ -106,13 +112,30 @@ function markdownToHtml(markdown){
                     }
                     
                     const tagText = line.substring(start+1, end);
+                    const tagParts = tagText.split(/[\s\t]+/);
 
-                    if(validTags.includes(tagText.split(' ')[0].toLowerCase())){
+                    if(tagParts.length > 0){
+                        let badTag = false;
+                        for(let i = 1; i < tagParts.length; i++){
+                            if(!validAttributes.includes(tagParts[i].split('=')[0].trim().toLowerCase())){
+                                line = line.slice(0, start)+`&lt;${tagText}&gt;`+line.slice(end+1);
+                                cursor = start+`&lt;${tagText}&gt;`.length;
+                                badTag = true;
+                                break;
+                            }
+                        }
+
+                        if(badTag){
+                            continue;
+                        }
+                    }
+
+                    if(validTags.includes(tagParts[0].toLowerCase())){
                         cursor = start+`<${tagText}>`.length;
                         continue;
                     }
 
-                    if(validTags.includes(tagText.split(' ')[0].toLowerCase().slice(1))){
+                    if(validTags.includes(tagParts[0].toLowerCase().slice(1))){
                         cursor = start+`</${tagText}>`.length;
                         continue;
                     }
