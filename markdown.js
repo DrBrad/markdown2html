@@ -32,6 +32,10 @@ function markdownToHtml(markdown){
         
         while(i < lines.length){
             let line = lines[i];
+
+            if(line.endsWith('  ')){
+                line = line.slice(0, line.length-2)+'<br>';
+            }
             
             //HANDLE CODE BLOCKS
             if(line.startsWith('```')){
