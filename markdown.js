@@ -60,9 +60,24 @@ function markdownToHtml(markdown){
             }
 
             //HANDLE BULLET LISTS
-            if(line.startsWith('- ')){
-                processedLines.push(`<li>${line.slice(2)}</li>`);
-                i++;
+            if(/^[-+*] /.test(line)){
+                let listItems = [];
+                while(i < lines.length && /^[-+*] /.test(lines[i])){
+                    listItems.push(`<li>${lines[i].slice(2)}</li>`);
+                    i++;
+                }
+                processedLines.push(`<ul>${listItems.join('')}</ul>`);
+                continue;
+            }
+
+            //HANDLE NUMBERED
+            if(/^\d+\.\s/.test(line)){
+                let listItems = [];
+                while(i < lines.length && /^\d+\.\s/.test(lines[i])){
+                    listItems.push(`<li>${lines[i].slice(lines[i].indexOf(' ')+1)}</li>`);
+                    i++;
+                }
+                processedLines.push(`<ol>${listItems.join('')}</ol>`);
                 continue;
             }
 
