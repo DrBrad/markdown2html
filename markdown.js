@@ -81,7 +81,6 @@ function markdownToHtml(markdown){
                     }
 
                     line = line.slice(0, start)+`&lt;${tagText}&gt;`+line.slice(end+1);
-                    console.log(line);
                     cursor = start+`&lt;${tagText}&gt;`.length;
                 }
             }
@@ -139,9 +138,11 @@ function markdownToHtml(markdown){
                 while(line.includes('**')){
                     const start = line.indexOf('**');
                     const end = line.indexOf('**', start+2);
+
                     if(end === -1){
                         break;
                     }
+
                     const boldText = line.substring(start+2, end);
                     line = line.slice(0, start)+`<strong>${boldText}</strong>`+line.slice(end + 2);
                 }
@@ -152,9 +153,11 @@ function markdownToHtml(markdown){
                 while(line.includes('*')){
                     const start = line.indexOf('*');
                     const end = line.indexOf('*', start+1);
+
                     if(end === -1){
                         break;
                     }
+
                     const italicText = line.substring(start+1, end);
                     line = line.slice(0, start)+`<em>${italicText}</em>`+line.slice(end + 1);
                 }
@@ -165,9 +168,11 @@ function markdownToHtml(markdown){
                 while(line.includes('`')){
                     const start = line.indexOf('`');
                     const end = line.indexOf('`', start+1);
+
                     if(end === -1){
                         break;
                     }
+
                     const italicText = line.substring(start+1, end);
                     line = line.slice(0, start)+`<code>${italicText}</code>`+line.slice(end + 1);
                 }
