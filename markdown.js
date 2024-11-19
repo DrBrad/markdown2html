@@ -10,7 +10,14 @@ function markdownToHtml(markdown){
                 break;
             }
             
-            const tagText = markdown.substring(start+1, end);
+            let tagText = markdown.substring(start+1, end);
+            if(tagText.includes('<')){
+                let subCursor = 0;
+                while(tagText.includes('<', subCursor)){
+                    const start = tagText.indexOf('<', cursor);
+                    tagText = tagText.slice(0, start)+'&lt;'+tagText.slice(start+1);
+                }
+            }
             markdown = markdown.slice(0, start)+`&lt;${tagText}&gt;`+markdown.slice(end+1);
         }
     }
@@ -191,7 +198,7 @@ function markDownText(line){
         if(startText !== -1 && endText !== -1 && startUrl !== -1 && endUrl !== -1){
             const linkText = line.substring(startText+1, endText);
             const url = line.substring(startUrl+1, endUrl);
-            const linkHtml = `<img src="${url}">${linkText}>`;
+            const linkHtml = `<img src="${url}">`;
 
             line = line.slice(0, startText)+linkHtml+line.slice(endUrl+1);
 
