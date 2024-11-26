@@ -275,9 +275,26 @@ function markDownText(line){
         if(startText !== -1 && endText !== -1 && startUrl !== -1 && endUrl !== -1){
             const linkText = line.substring(startText+1, endText);
             const url = line.substring(startUrl+1, endUrl);
-            if(!/^(#|\/|https?:\/\/)[^\s]+/.test(url)){
+            const pattern = new RegExp(
+                '^(' +
+                '([a-zA-Z]+:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR IP (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?' + // fragment locator
+                '|' +
+                '(\\/[-a-z\\d%_.~+]+(\\/[-a-z\\d%_.~+]+)*\\/?)' + // relative path with optional trailing slash
+                '|' +
+                '(\\#[-a-z\\d_]*)' + // fragment link
+                ')$',
+            'i');
+
+            if(!pattern.test(url)){
+                console.log('INVALID: '+url);
                 break;
             }
+            console.log('VALID: '+url);
             const linkHtml = `<a href="${url}">${linkText}</a>`;
 
             line = line.slice(0, startText)+linkHtml+line.slice(endUrl+1);
