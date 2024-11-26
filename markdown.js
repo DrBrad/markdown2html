@@ -291,10 +291,9 @@ function markDownText(line){
             'i');
 
             if(!pattern.test(url)){
-                console.log('INVALID: '+url);
                 break;
             }
-            console.log('VALID: '+url);
+            
             const linkHtml = `<a href="${url}">${linkText}</a>`;
 
             line = line.slice(0, startText)+linkHtml+line.slice(endUrl+1);
