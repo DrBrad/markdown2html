@@ -28,6 +28,10 @@ function markdownToHtml(markdown){
                 inCodeBlock = !inCodeBlock;
 
                 if(inCodeBlock){
+                    if(processedLines.length > 0){
+                        processedLines[processedLines.length-1] += '</p>';
+                    }
+
                     codeLanguage = (line.slice(3) == '') ? 'plain' : line.slice(3).toLowerCase();
                     const previousLine = lines[i+1];
                     codeLines.push(`<pre language='${codeLanguage}'><code>`+tokenizeLine(codeLanguage, previousLine));
@@ -36,9 +40,20 @@ function markdownToHtml(markdown){
                 }
 
                 codeLanguage = '';
-                codeLines[codeLines.length-1] += '</code></pre>'+line.slice(3);
+                codeLines[codeLines.length-1] += '</code></pre>';
                 processedLines.push.apply(processedLines, codeLines);
                 codeLines = [];
+
+                if(line.length > 3){
+                    processedLines.push('<p>');
+                    lines[i] = line.slice(3);
+                    continue;
+                }
+
+                if(i < lines.length-1){
+                    processedLines.push('<p>');
+                }
+
                 i++;
                 continue;
             }
