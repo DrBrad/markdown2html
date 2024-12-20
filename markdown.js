@@ -127,13 +127,13 @@ function markdownToHtml(markdown){
                     nextLine = lines[i+1].trim();
 
                     if(/^=+$/.test(nextLine)){
-                        const slug = line.split(/\s/).join('-').toLowerCase();
+                        const slug = line.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                         processedLines.push(`<h1 id='${slug}'>${line}</h1>`);
                         i += 2;
                         continue;
     
                     }else if(/^-+$/.test(nextLine)){
-                        const slug = line.split(/\s/).join('-').toLowerCase();
+                        const slug = line.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                         processedLines.push(`<h2 id='${slug}'>${line}</h2>`);
                         i += 2;
                         continue;
@@ -143,19 +143,19 @@ function markdownToHtml(markdown){
 
             //HANDLE HEADERS
             if(line.startsWith('### ')){
-                const slug = line.slice(4).split(/\s/).join('-').toLowerCase();
+                const slug = line.slice(4).replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                 processedLines.push(`<h3 id='${slug}'>${line.slice(4)}</h3>`);
                 i++;
                 continue;
 
             }else if(line.startsWith('## ')){
-                const slug = line.slice(3).split(/\s/).join('-').toLowerCase();
+                const slug = line.slice(3).replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                 processedLines.push(`<h2 id='${slug}'>${line.slice(3)}</h2>`);
                 i++;
                 continue;
 
             }else if(line.startsWith('# ')){
-                const slug = line.slice(2).split(/\s/).join('-').toLowerCase();
+                const slug = line.slice(2).replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                 processedLines.push(`<h1 id='${slug}'>${line.slice(2)}</h1>`);
                 i++;
                 continue;
